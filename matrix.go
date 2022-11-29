@@ -1,12 +1,11 @@
-package matGollum
+package matrix
 
 import (
 	"encoding/csv"
-	"fmt"
+	"gollum/matType"
 	"gonum.org/v1/gonum/mat"
 	"log"
 	"os"
-	"strconv"
 )
 
 // ToMatrix recibe un string con la ruta
@@ -28,26 +27,12 @@ func ToMatrix(str string) *mat.Dense {
 	newMatString, err := csvRead.ReadAll()
 
 	if err != nil {
-		log.Fatal("No es posible convertir este archivo a matríz"+str, err)
+		log.Fatal("No es posible convertir este archivo")
 	}
-	row := len(newMatString)
-	col := len(newMatString[0])
-	tamMat := row * col
-	newMatFloat := make([]float64, 0, tamMat)
 
-	for _, sliceS := range newMatString {
-		for _, element := range sliceS {
-			j, err := strconv.ParseFloat(element, 64)
+	newMatMat := matType.MatType{}
+	newMatMat.NewMat(newMatString)
 
-			if err != nil {
-				panic(err)
-			}
-			newMatFloat = append(newMatFloat, j)
-		}
-	}
-	newMatMat := mat.NewDense(row, col, newMatFloat)
+	return newMatMat.GetMat()
 
-	fmt.Println("Matríz parseada: ")
-	fmt.Println(mat.Formatted(newMatMat))
-	return newMatMat
 }
